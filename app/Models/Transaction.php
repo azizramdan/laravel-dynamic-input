@@ -18,6 +18,13 @@ class Transaction extends Model
 
     public function items()
     {
-        return $this->belongsToMany(Category::class, 'transaction_items');
+        return $this->belongsToMany(Category::class, 'transaction_items')
+            ->withPivot([
+                'name',
+                'qty',
+                'unit',
+                'price',
+                'total',
+            ]);
     }
 }

@@ -80,4 +80,66 @@ class TransactionController extends Controller
 
         return redirect()->back()->with('success', 'Berhasil menghapus data transaksi');
     }
+
+    public function edit(Transaction $transaction)
+    {
+        $categories = Category::all();
+        $transaction->load('items');
+
+        return view('transaction.edit', compact('categories', 'transaction'));
+    }
+
+    public function update(Transaction $transaction, Request $request)
+    {
+        $validated = $request->validate([
+            'date' => ['required', 'date'],
+            'customer_name' => ['required', 'string'],
+            'status' => ['required', 'in:cash,credit'],
+            'category_id' => ['required', 'array'],
+            'category_id.*' => ['required', 'numeric'],
+            'name' => ['required', 'array'],
+            'name.*' => ['required', 'string'],
+            'qty' => ['required', 'array'],
+            'qty.*' => ['required', 'numeric'],
+            'unit' => ['required', 'array'],
+            'unit.*' => ['required', 'in:Kg,Ons'],
+            'price' => ['required', 'array'],
+            'price.*' => ['required', 'numeric'],
+        ]);
+
+        try {
+            DB::transaction(function () use ($validated, $transaction) {
+                $total = 0;
+
+                foreach ($validated['price'] as $index => $price) {
+                    $total += $price * $validated['qty'][$index];
+                }
+                
+                $transaction->update([
+                    'date' => $validated['date'],
+                    'customer_name' => $validated['customer_name'],
+                    'status' => $validated['status'],
+                    'total' => $total,
+                ]);
+
+                $sync = [];
+
+                foreach ($validated['category_id'] as $index => $categoryId) {
+                    $sync[$validated['category_id'][$index]] = [
+                        'name' => $validated['name'][$index],
+                        'qty' => $validated['qty'][$index],
+                        'unit' => $validated['unit'][$index],
+                        'price' => $validated['price'][$index],
+                        'total' => $validated['qty'][$index] * $validated['price'][$index],
+                    ];
+                }
+
+                $transaction->items()->sync($sync);
+            });
+        } catch (Exception $e) {
+            throw $e;
+        }
+
+        return redirect('/')->with('success', 'Berhasil ubah data transaksi');
+    }
 }

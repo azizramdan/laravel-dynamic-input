@@ -18,3 +18,5 @@ Route::get('/', [TransactionController::class, 'index']);
 Route::get('create', [TransactionController::class, 'create']);
 Route::post('/', [TransactionController::class, 'store']);
 Route::delete('/{transaction}', [TransactionController::class, 'destroy']);
+Route::get('/{transaction}/edit', [TransactionController::class, 'edit']);
+Route::patch('/{transaction}', [TransactionController::class, 'update']);

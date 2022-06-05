@@ -11,6 +11,13 @@ class Category extends Model
 
     public function transactionItems()
     {
-        return $this->belongsToMany(Transaction::class, 'transaction_items');
+        return $this->belongsToMany(Transaction::class, 'transaction_items')
+            ->withPivot([
+                'name',
+                'qty',
+                'unit',
+                'price',
+                'total',
+            ]);
     }
 }
