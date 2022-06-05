@@ -138,6 +138,17 @@
                 alert('Minimal ada 1 item')
                 return false
             }
+
+            const categoryIds = []
+
+            $('#create-form select[name="category_id[]"]').each(function () {
+                categoryIds.push($(this).val())
+            })
+            
+            if ((new Set(categoryIds)).size !== categoryIds.length) {
+                alert('Tidak boleh ada kategori yang sama')
+                return false
+            }
         })
     </script>
 @endpush
