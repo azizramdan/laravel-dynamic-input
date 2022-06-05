@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Transaction\StoreTransactionRequest;
+use App\Http\Requests\Transaction\UpdateTransactionRequest;
 use App\Models\Category;
 use App\Models\Transaction;
 use Exception;
@@ -24,23 +26,9 @@ class TransactionController extends Controller
         return view('transaction.create', compact('categories'));
     }
 
-    public function store(Request $request)
+    public function store(StoreTransactionRequest $request)
     {
-        $validated = $request->validate([
-            'date' => ['required', 'date'],
-            'customer_name' => ['required', 'string'],
-            'status' => ['required', 'in:cash,credit'],
-            'category_id' => ['required', 'array'],
-            'category_id.*' => ['required', 'numeric'],
-            'name' => ['required', 'array'],
-            'name.*' => ['required', 'string'],
-            'qty' => ['required', 'array'],
-            'qty.*' => ['required', 'numeric'],
-            'unit' => ['required', 'array'],
-            'unit.*' => ['required', 'in:Kg,Ons'],
-            'price' => ['required', 'array'],
-            'price.*' => ['required', 'numeric'],
-        ]);
+        $validated = $request->validated();
 
         try {
             DB::transaction(function () use ($validated) {
@@ -89,23 +77,9 @@ class TransactionController extends Controller
         return view('transaction.edit', compact('categories', 'transaction'));
     }
 
-    public function update(Transaction $transaction, Request $request)
+    public function update(Transaction $transaction, UpdateTransactionRequest $request)
     {
-        $validated = $request->validate([
-            'date' => ['required', 'date'],
-            'customer_name' => ['required', 'string'],
-            'status' => ['required', 'in:cash,credit'],
-            'category_id' => ['required', 'array'],
-            'category_id.*' => ['required', 'numeric'],
-            'name' => ['required', 'array'],
-            'name.*' => ['required', 'string'],
-            'qty' => ['required', 'array'],
-            'qty.*' => ['required', 'numeric'],
-            'unit' => ['required', 'array'],
-            'unit.*' => ['required', 'in:Kg,Ons'],
-            'price' => ['required', 'array'],
-            'price.*' => ['required', 'numeric'],
-        ]);
+        $validated = $request->validated();
 
         try {
             DB::transaction(function () use ($validated, $transaction) {
