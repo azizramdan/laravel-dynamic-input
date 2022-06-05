@@ -17,3 +17,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [TransactionController::class, 'index']);
 Route::get('create', [TransactionController::class, 'create']);
 Route::post('/', [TransactionController::class, 'store']);
+Route::delete('/{transaction}', [TransactionController::class, 'destroy']);

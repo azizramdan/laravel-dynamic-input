@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('transaction_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id')->constrained();
-            $table->foreignId('category_id')->constrained();
+            $table->foreignId('transaction_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->unsignedInteger('qty');
             $table->enum('unit', ['Kg', 'Ons']);

@@ -73,4 +73,11 @@ class TransactionController extends Controller
 
         return redirect('/')->with('success', 'Berhasil menambah data transaksi');
     }
+
+    public function destroy(Transaction $transaction)
+    {
+        $transaction->delete();
+
+        return redirect()->back()->with('success', 'Berhasil menghapus data transaksi');
+    }
 }
